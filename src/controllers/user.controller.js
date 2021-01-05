@@ -106,4 +106,11 @@ module.exports = {
             res.status(400).send();
         }
     },
+    async uploadAvatar(req, res) {
+        try {
+            res.send();
+        } catch (error) {
+            res.status(500).send();
+        }
+    },
 };
