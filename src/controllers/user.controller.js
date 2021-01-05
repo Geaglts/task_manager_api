@@ -49,29 +49,18 @@ module.exports = {
         }
 
         try {
-            const _id = req.params.id;
-            const user = await User.findById(_id);
+            updates.forEach((update) => (req.user[update] = req.body[update]));
+            await req.user.save();
 
-            if (!user) {
-                return res.status(400).send();
-            }
-
-            updates.forEach((update) => (user[update] = req.body[update]));
-            await user.save();
-
-            res.send(user);
+            res.send(req.user);
         } catch (error) {
             res.send(500).send(error);
         }
     },
     async deleteOne(req, res) {
         try {
-            const _id = req.params.id;
-            const response = await User.findOneAndDelete({ _id });
-            if (response) {
-                return res.send("User Deleted");
-            }
-            res.send("User not found");
+            await req.user.remove();
+            res.send(req.user);
         } catch (error) {
             res.send(500).send();
         }
