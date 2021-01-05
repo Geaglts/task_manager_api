@@ -13,6 +13,10 @@ module.exports = {
                 .populate({
                     path: "tasks",
                     match,
+                    options: {
+                        limit: parseInt(req.query.limit),
+                        skip: parseInt(req.query.skip),
+                    },
                 })
                 .execPopulate();
             res.send(req.user.tasks);
