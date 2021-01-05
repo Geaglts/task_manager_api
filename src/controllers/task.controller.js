@@ -23,7 +23,7 @@ module.exports = {
     },
     async createOne(req, res) {
         try {
-            const newTask = new Task(req.body);
+            const newTask = new Task({ ...req.body, owner: req.user._id });
             await newTask.save();
             res.status(201).send(newTask);
         } catch (error) {

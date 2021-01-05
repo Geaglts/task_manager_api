@@ -99,7 +99,7 @@ module.exports = {
             res.status(500).send();
         }
     },
-    me(req, res) {
+    async me(req, res) {
         try {
             res.send(req.user);
         } catch (error) {

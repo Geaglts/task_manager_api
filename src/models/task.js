@@ -12,6 +12,11 @@ const taskSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    owner: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User",
+    },
 });
 
 const modelTask = model("Task", taskSchema, "tasks");
