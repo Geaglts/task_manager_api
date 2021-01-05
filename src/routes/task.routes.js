@@ -7,13 +7,13 @@ const TaskController = require("../controllers/task.controller");
 
 router
     .route("/")
-    .get(TaskController.getMany)
+    .get(auth, TaskController.getMany)
     .post(auth, TaskController.createOne);
 
 router
     .route("/:id")
-    .get(TaskController.getOne)
-    .put(TaskController.updateOne)
-    .delete(TaskController.deleteOne);
+    .get(auth, TaskController.getOne)
+    .put(auth, TaskController.updateOne)
+    .delete(auth, TaskController.deleteOne);
 
 module.exports = router;

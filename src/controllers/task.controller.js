@@ -3,8 +3,9 @@ const Task = require("../models/task");
 module.exports = {
     async getMany(req, res) {
         try {
-            const tasks = await Task.find();
-            res.send(tasks);
+            //const tasks = await Task.find();
+            await req.user.populate("tasks").execPopulate();
+            res.send(req.user.tasks);
         } catch (error) {
             res.status(500).send();
         }
@@ -12,7 +13,7 @@ module.exports = {
     async getOne(req, res) {
         try {
             const _id = req.params.id;
-            const task = await Task.findById(_id);
+            const task = await Task.findOne({ _id, owner: req.user._id });
             if (!task) {
                 return res.status(404).send();
             }
@@ -43,7 +44,7 @@ module.exports = {
 
         try {
             const _id = req.params.id;
-            const task = await Task.findById(_id);
+            const task = await Task.findOne({ _id, owner: req.user._id });
 
             if (!task) {
                 return res.status(400).send("Task not found");
@@ -60,13 +61,16 @@ module.exports = {
     async deleteOne(req, res) {
         try {
             const _id = req.params.id;
-            const response = await Task.findOneAndDelete({ _id });
-            if (response) {
+            const task = await Task.findOneAndDelete({
+                _id,
+                owner: req.user._id,
+            });
+            if (task) {
                 return res.send("Task Deleted");
             }
-            res.send("Task not found");
+            res.status(404).send("Task not found");
         } catch (error) {
-            res.send(500).send();
+            res.status(500).send();
         }
     },
 };
