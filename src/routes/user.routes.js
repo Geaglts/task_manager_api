@@ -47,4 +47,6 @@ router.post("/login", UserController.login);
 router.post("/logout", auth, UserController.logout);
 router.post("/logoutAll", auth, UserController.logoutAll);
 
+router.get("/:id/avatar", UserController.findAvatar);
+
 module.exports = router;
