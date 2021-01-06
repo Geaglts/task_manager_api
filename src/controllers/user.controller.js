@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const sharp = require("sharp");
 
 module.exports = {
     async getMany(req, res) {
@@ -108,8 +109,14 @@ module.exports = {
     },
     async uploadAvatar(req, res) {
         try {
-            req.user.avatar = req.file.buffer;
+            const buffer = await sharp(req.file.buffer)
+                .resize({ width: 250, height: 250 })
+                .png()
+                .toBuffer();
+
+            req.user.avatar = buffer;
             await req.user.save();
+
             res.send();
         } catch (error) {
             res.status(500).send();
