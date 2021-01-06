@@ -6,13 +6,34 @@ const router = new Router();
 
 const upload = multer({
     dest: "avatars",
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(
+                new Error(
+                    "Please upload an image with extention jpg, jpeg or png."
+                )
+            );
+        }
+
+        cb(undefined, true);
+    },
 });
 
 const UserController = require("../controllers/user.controller");
 
 router.route("/").get(UserController.getMany).post(UserController.createOne);
 
-router.post("/me/avatar", upload.single("avatar"), UserController.uploadAvatar);
+router.post(
+    "/me/avatar",
+    upload.single("avatar"),
+    UserController.uploadAvatar,
+    (error, req, res, next) => {
+        res.status(400).send({ error: error.message });
+    }
+);
 
 router
     .route("/me")
